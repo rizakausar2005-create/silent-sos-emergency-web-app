@@ -1,0 +1,55 @@
+.home {
+    text-align: center;
+    padding: 80px 20px;
+    background-color: #f8f9fa;
+    min-height: 80vh;
+}
+
+.home h1 {
+    font-size: 45px;
+    color: #b91c1c;
+    margin-bottom: 20px;
+}
+
+.home p {
+    font-size: 20px;
+    color: #444;
+    margin-bottom: 30px;
+}
+
+.sos-button {
+    padding: 15px 40px;
+    font-size: 20px;
+    border: none;
+    border-radius: 30px;
+    background-color: #dc2626;
+    color: white;
+    cursor: pointer;
+}
+
+.sos-button:hover {
+    background-color: #991b1b;
+}
+
+.ready-alert {
+    color: green;
+}
+
+.active-alert {
+    color: red;
+    font-size: 25px;
+}
+
+.cancel-button {
+    padding: 12px 35px;
+    font-size: 18px;
+    border: none;
+    border-radius: 25px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+.cancel-button:hover {
+    background-color: #333;
+}
