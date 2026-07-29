@@ -1,6 +1,7 @@
 import Location from "../components/Location";
 import SOSButton from "../components/SOSButton";
 import EmergencyContacts from "../components/EmergencyContacts";
+import AlertStatus from "../components/AlertStatus";
 
 function Dashboard() {
 
@@ -17,17 +18,7 @@ function Dashboard() {
       </h2>
 
 
-      <hr />
-
-
-      <h3>
-        Emergency Contacts
-      </h3>
-
-        <EmergencyContacts />
-
-
-      <hr />
+  
 
 
       <h3>
@@ -41,6 +32,21 @@ function Dashboard() {
 
 
       <Location />
+
+      <hr/>
+
+      <AlertStatus/>
+      <hr/>
+
+
+      <h3>
+        Emergency Contacts
+      </h3>
+
+        <EmergencyContacts />
+
+
+      <hr />
 
 
     </div>
