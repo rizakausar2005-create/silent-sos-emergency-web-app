@@ -2,7 +2,7 @@ import Location from "../components/Location";
 import SOSButton from "../components/SOSButton";
 import EmergencyContacts from "../components/EmergencyContacts";
 import AlertStatus from "../components/AlertStatus";
-
+import AlertHistory from "../components/AlertHistory";
 function Dashboard() {
 
   return (
@@ -36,6 +36,9 @@ function Dashboard() {
       <hr/>
 
       <AlertStatus/>
+      <hr/>
+
+      <AlertHistory/>
       <hr/>
 
 
