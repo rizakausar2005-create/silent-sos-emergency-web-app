@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API from "../services/api";
 
 function Register() {
 
@@ -20,15 +21,44 @@ function Register() {
   }
 
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
 
-    e.preventDefault();
+  e.preventDefault();
 
-    console.log(user);
+  try {
 
-    alert("Registration Successful");
+    const response = await API.post("/register", user);
+
+    alert(response.data.message);
+
+    console.log(response.data);
+
+    setUser({
+      name: "",
+      email: "",
+      phone: "",
+      password: ""
+    });
 
   }
+
+  catch (error) {
+
+  console.error("Full Error:", error);
+
+  if (error.response) {
+    console.log("Response:", error.response.data);
+  }
+
+  if (error.request) {
+    console.log("Request:", error.request);
+  }
+
+  alert(error.message);
+
+}
+
+}
 
 
   return (
