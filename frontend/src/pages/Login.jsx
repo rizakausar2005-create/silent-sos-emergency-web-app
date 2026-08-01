@@ -1,5 +1,6 @@
 // LOGIN PAGE TEST
 import { useState } from "react";
+import API from "../services/api";
 
 function Login() {
 
@@ -18,15 +19,34 @@ function Login() {
 
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
 
-    e.preventDefault();
+  e.preventDefault();
 
-    console.log(loginData);
+  try {
 
-    alert("Login Successful");
+    const response = await API.post("/login", loginData);
+
+    alert(response.data.message);
+
+    console.log(response.data);
+
+    setLoginData({
+      email: "",
+      password: ""
+    });
 
   }
+
+  catch (error) {
+
+    console.error(error);
+
+    alert("Invalid Email or Password");
+
+  }
+
+}
 
 
   return (
