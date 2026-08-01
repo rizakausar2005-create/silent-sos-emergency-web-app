@@ -4,6 +4,7 @@ console.log(process.env.MONGO_URI);
 const connectDB = require("./config/db");
 const express = require("express");
 const cors = require("cors");
+const User = require("./models/User");
 const app = express();
 
 const PORT = 5000;
@@ -17,13 +18,30 @@ app.get("/", (req, res) => {
 });
 
 // Register API
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
 
-    console.log(req.body);
+    try {
+        console.log(req.body);
 
-    res.json({
-        message: "User registered successfully!"
-    });
+        const user = new User(req.body);
+
+        await user.save();
+
+        res.json({
+            message: "User registered successfully!"
+        });
+
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            message: "Registration Failed"
+        });
+
+    }
 
 });
 connectDB();
