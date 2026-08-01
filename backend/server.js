@@ -1,3 +1,7 @@
+require("dotenv").config();
+console.log(process.env.MONGO_URI);
+
+const connectDB = require("./config/db");
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -22,6 +26,7 @@ app.post("/register", (req, res) => {
     });
 
 });
+connectDB();
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
