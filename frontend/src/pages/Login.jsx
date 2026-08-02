@@ -26,18 +26,23 @@ function Login() {
   try {
 
     const response = await API.post("/login", loginData);
-    console.log(response.data);
-    alert(response.data.message);
-    
 
-    
+// Save JWT Token
+localStorage.setItem("token", response.data.token);
 
-    setLoginData({
-      email: "",
-      password: ""
-    });
-    navigate("/dashboard");
+// Save Email
+localStorage.setItem("email", loginData.email);
 
+console.log(response.data);
+
+alert(response.data.message);
+
+setLoginData({
+  email: "",
+  password: ""
+});
+
+navigate("/dashboard");
   }
 
   catch (error) {
