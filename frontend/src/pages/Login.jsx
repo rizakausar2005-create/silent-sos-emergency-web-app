@@ -1,14 +1,14 @@
 // LOGIN PAGE TEST
 import { useState } from "react";
 import API from "../services/api";
-
+import { useNavigate } from "react-router-dom";
 function Login() {
 
   const [loginData, setLoginData] = useState({
     email: "",
     password: ""
   });
-
+  const navigate = useNavigate();
 
   function handleChange(e) {
 
@@ -26,15 +26,17 @@ function Login() {
   try {
 
     const response = await API.post("/login", loginData);
-
-    alert(response.data.message);
-
     console.log(response.data);
+    alert(response.data.message);
+    
+
+    
 
     setLoginData({
       email: "",
       password: ""
     });
+    navigate("/dashboard");
 
   }
 
