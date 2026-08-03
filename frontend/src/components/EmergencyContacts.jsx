@@ -1,12 +1,13 @@
 import { useState } from "react";
-
+import API from "../services/api";
 
 function EmergencyContacts() {
 
   const [contact, setContact] = useState({
-    name: "",
-    phone: ""
-  });
+  name: "",
+  phone: "",
+  relationship: ""
+});
 
 
   const [contacts, setContacts] = useState([]);
@@ -24,24 +25,48 @@ function EmergencyContacts() {
 
 
 
-  function addContact(e) {
+  async function addContact(e) {
 
     e.preventDefault();
 
+    try {
 
-    setContacts([
-      ...contacts,
-      contact
-    ]);
+        const response = await API.post("/contacts", {
 
+            user: localStorage.getItem("userId"),
 
-    setContact({
-      name: "",
-      phone: ""
-    });
+            name: contact.name,
 
-  }
+            phone: contact.phone,
 
+            relationship: contact.relationship
+
+        });
+
+        alert(response.data.message);
+
+        setContacts([
+            ...contacts,
+            contact
+        ]);
+
+        setContact({
+            name: "",
+            phone: "",
+            relationship: ""
+        });
+
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+        alert("Failed to Add Contact");
+
+    }
+
+}
 
 
   return (
@@ -76,6 +101,17 @@ function EmergencyContacts() {
 
 
         <br />
+        <br />
+
+<input
+  type="text"
+  name="relationship"
+  placeholder="Relationship"
+  value={contact.relationship}
+  onChange={handleChange}
+/>
+
+<br />
 
 
         <button type="submit">
@@ -95,8 +131,8 @@ function EmergencyContacts() {
       {
         contacts.map((item,index)=>(
           <p key={index}>
-            {item.name} - {item.phone}
-          </p>
+  {item.name} | {item.phone} | {item.relationship}
+</p>
         ))
       }
 
