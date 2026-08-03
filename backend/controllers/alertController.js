@@ -1,0 +1,37 @@
+const Alert = require("../models/Alert");
+
+// Create SOS Alert
+const createAlert = async (req, res) => {
+
+    try {
+
+        const { user, latitude, longitude } = req.body;
+
+        const newAlert = new Alert({
+            user,
+            latitude,
+            longitude
+        });
+
+        await newAlert.save();
+
+        res.status(201).json({
+            message: "SOS Alert Sent Successfully",
+            alert: newAlert
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            message: "Failed to Send SOS Alert"
+        });
+
+    }
+
+};
+
+module.exports = {
+    createAlert
+};

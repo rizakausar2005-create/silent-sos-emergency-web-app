@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
+const alertRoutes = require("./routes/alertRoutes");
 const connectDB = require("./config/db");
 const express = require("express");
 const cors = require("cors");
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // Routes
 app.use("/", authRoutes);
+app.use("/", alertRoutes);
 
 app.get("/", (req, res) => {
   res.send("Silent SOS Backend is Running...");

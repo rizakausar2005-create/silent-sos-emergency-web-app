@@ -1,8 +1,37 @@
+import API from "../services/api";
 import { useState } from "react";
 
 function SOSButton() {
 
   const [alertActive, setAlertActive] = useState(false);
+  async function handleSOS() {
+
+  try {
+
+    const response = await API.post("/alert", {
+
+      user: localStorage.getItem("userId"),
+      // Temporary Location
+      latitude: 30.3165,
+      longitude: 78.0322
+
+    });
+
+    alert(response.data.message);
+
+    setAlertActive(true);
+
+  }
+
+  catch (error) {
+
+    console.log(error);
+
+    alert("Failed to send SOS Alert");
+
+  }
+
+}
 
   return (
     <div>
@@ -31,9 +60,9 @@ function SOSButton() {
             </h3>
 
             <button
-              onClick={() => setAlertActive(true)}
+              onClick={handleSOS}
             >
-              Send SOS
+               Send SOS
             </button>
           </>
         )

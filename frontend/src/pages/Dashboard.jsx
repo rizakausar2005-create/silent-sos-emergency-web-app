@@ -1,9 +1,33 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Location from "../components/Location";
 import SOSButton from "../components/SOSButton";
 import EmergencyContacts from "../components/EmergencyContacts";
 import AlertStatus from "../components/AlertStatus";
 import AlertHistory from "../components/AlertHistory";
 function Dashboard() {
+  const navigate = useNavigate();
+
+useEffect(() => {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("Please login first.");
+        navigate("/login");
+    }
+
+}, [navigate]);
+function handleLogout() {
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+
+    alert("Logged Out Successfully");
+
+    navigate("/login");
+
+}
 
   return (
     <div>
@@ -17,7 +41,9 @@ function Dashboard() {
         Welcome User
       </h2>
 
-
+      <button onClick={handleLogout}>
+        Logout
+      </button>
   
 
 

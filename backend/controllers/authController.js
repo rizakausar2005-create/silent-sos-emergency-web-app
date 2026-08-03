@@ -73,12 +73,11 @@ const token = jwt.sign(
         expiresIn: "7d"
     }
 );
-
 res.json({
     message: "Login Successful",
-    token
+    token,
+    userId: user._id
 });
-
     } catch (error) {
 
         console.log(error);

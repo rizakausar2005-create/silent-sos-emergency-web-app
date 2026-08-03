@@ -30,6 +30,9 @@ function Login() {
 // Save JWT Token
 localStorage.setItem("token", response.data.token);
 
+// Save User ID
+localStorage.setItem("userId", response.data.userId);
+
 // Save Email
 localStorage.setItem("email", loginData.email);
 
