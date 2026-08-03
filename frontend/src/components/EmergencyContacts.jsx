@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../services/api";
 
 function EmergencyContacts() {
 
   const [contact, setContact] = useState({
+    
   name: "",
   phone: "",
   relationship: ""
@@ -11,6 +12,11 @@ function EmergencyContacts() {
 
 
   const [contacts, setContacts] = useState([]);
+  useEffect(() => {
+
+    fetchContacts();
+
+}, []);
 
 
 
@@ -22,6 +28,30 @@ function EmergencyContacts() {
     });
 
   }
+
+  async function fetchContacts() {
+
+    try {
+
+        const response = await API.get("/contacts", {
+
+            params: {
+                user: localStorage.getItem("userId")
+            }
+
+        });
+
+        setContacts(response.data);
+
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+    }
+
+}
 
 
 
@@ -45,11 +75,7 @@ function EmergencyContacts() {
 
         alert(response.data.message);
 
-        setContacts([
-            ...contacts,
-            contact
-        ]);
-
+        fetchContacts();
         setContact({
             name: "",
             phone: "",

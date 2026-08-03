@@ -30,9 +30,33 @@ const addContact = async (req, res) => {
         });
 
     }
+    
+
+};
+// Get All Contacts
+const getContacts = async (req, res) => {
+
+    try {
+
+        const { user } = req.query;
+
+        const contacts = await EmergencyContact.find({ user });
+
+        res.json(contacts);
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            message: "Failed to Fetch Contacts"
+        });
+
+    }
 
 };
 
 module.exports = {
-    addContact
+    addContact,
+    getContacts
 };
