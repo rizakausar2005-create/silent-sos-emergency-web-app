@@ -52,6 +52,25 @@ function EmergencyContacts() {
     }
 
 }
+async function deleteContact(id) {
+
+  try {
+
+    const response = await API.delete(`/contacts/${id}`);
+
+    alert(response.data.message);
+
+    fetchContacts();
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Failed to Delete Contact");
+
+  }
+
+}
 
 
 
@@ -127,7 +146,6 @@ function EmergencyContacts() {
 
 
         <br />
-        <br />
 
 <input
   type="text"
@@ -154,14 +172,21 @@ function EmergencyContacts() {
       </h4>
 
 
-      {
-        contacts.map((item,index)=>(
-          <p key={index}>
-  {item.name} | {item.phone} | {item.relationship}
-</p>
-        ))
-      }
+      {contacts.map((item) => (
+  <div key={item._id}>
 
+    <p>
+      {item.name} | {item.phone} | {item.relationship}
+    </p>
+
+    <button onClick={() => deleteContact(item._id)}>
+      🗑 Delete
+    </button>
+
+    <hr />
+
+  </div>
+))}
 
     </div>
   );

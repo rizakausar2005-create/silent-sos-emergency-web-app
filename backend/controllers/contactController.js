@@ -55,8 +55,33 @@ const getContacts = async (req, res) => {
     }
 
 };
+// Delete Contact
+const deleteContact = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        await EmergencyContact.findByIdAndDelete(id);
+
+        res.json({
+            message: "Contact Deleted Successfully"
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            message: "Failed to Delete Contact"
+        });
+
+    }
+
+};
 
 module.exports = {
     addContact,
-    getContacts
+    getContacts,
+    deleteContact
 };
