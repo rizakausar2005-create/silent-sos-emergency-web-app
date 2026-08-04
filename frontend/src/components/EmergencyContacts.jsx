@@ -11,6 +11,9 @@ function EmergencyContacts() {
 });
 
 
+  const [editingId, setEditingId] = useState(null);
+
+
   const [contacts, setContacts] = useState([]);
   useEffect(() => {
 
@@ -73,6 +76,19 @@ async function deleteContact(id) {
 }
 
 
+function editContact(item) {
+
+  setContact({
+    name: item.name,
+    phone: item.phone,
+    relationship: item.relationship
+  });
+
+  setEditingId(item._id);
+
+}
+
+
 
   async function addContact(e) {
 
@@ -80,37 +96,55 @@ async function deleteContact(id) {
 
     try {
 
-        const response = await API.post("/contacts", {
+    let response;
 
-            user: localStorage.getItem("userId"),
+    if (editingId) {
+
+        response = await API.put(`/contacts/${editingId}`, {
 
             name: contact.name,
-
             phone: contact.phone,
-
             relationship: contact.relationship
 
         });
 
-        alert(response.data.message);
+    }
 
-        fetchContacts();
-        setContact({
-            name: "",
-            phone: "",
-            relationship: ""
+    else {
+
+        response = await API.post("/contacts", {
+
+            user: localStorage.getItem("userId"),
+
+            name: contact.name,
+            phone: contact.phone,
+            relationship: contact.relationship
+
         });
 
     }
 
-    catch (error) {
+    alert(response.data.message);
 
-        console.log(error);
+    fetchContacts();
 
-        alert("Failed to Add Contact");
+    setContact({
+        name: "",
+        phone: "",
+        relationship: ""
+    });
 
-    }
+    setEditingId(null);
 
+}
+
+catch (error) {
+
+    console.log(error);
+
+    alert("Operation Failed");
+
+}
 }
 
 
@@ -159,7 +193,7 @@ async function deleteContact(id) {
 
 
         <button type="submit">
-          Add Contact
+          {editingId ? "Update Contact" : "Add Contact"}
         </button>
 
 
@@ -178,6 +212,11 @@ async function deleteContact(id) {
     <p>
       {item.name} | {item.phone} | {item.relationship}
     </p>
+
+
+    <button onClick={() => editContact(item)}>
+      ✏️ Edit
+    </button>
 
     <button onClick={() => deleteContact(item._id)}>
       🗑 Delete

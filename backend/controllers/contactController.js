@@ -79,9 +79,43 @@ const deleteContact = async (req, res) => {
     }
 
 };
+// Update Contact
+const updateContact = async (req, res) => {
+
+    try {
+
+        const updatedContact = await EmergencyContact.findByIdAndUpdate(
+
+            req.params.id,
+
+            req.body,
+
+            { new: true }
+
+        );
+
+        res.json({
+            message: "Contact Updated Successfully",
+            updatedContact
+        });
+
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            message: "Failed to Update Contact"
+        });
+
+    }
+
+};
 
 module.exports = {
     addContact,
     getContacts,
-    deleteContact
+    deleteContact,
+    updateContact
 };
