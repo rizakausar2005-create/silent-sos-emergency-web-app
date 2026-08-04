@@ -36,13 +36,7 @@ function EmergencyContacts() {
 
     try {
 
-        const response = await API.get("/contacts", {
-
-            params: {
-                user: localStorage.getItem("userId")
-            }
-
-        });
+        const response = await API.get("/contacts");
 
         setContacts(response.data);
 
@@ -113,8 +107,6 @@ function editContact(item) {
     else {
 
         response = await API.post("/contacts", {
-
-            user: localStorage.getItem("userId"),
 
             name: contact.name,
             phone: contact.phone,

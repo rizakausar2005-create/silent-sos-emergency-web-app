@@ -5,10 +5,9 @@ const addContact = async (req, res) => {
 
     try {
 
-        const { user, name, phone, relationship } = req.body;
-
+        const { name, phone, relationship } = req.body;
         const newContact = new EmergencyContact({
-            user,
+            user: req.user.id,
             name,
             phone,
             relationship
@@ -40,8 +39,9 @@ const getContacts = async (req, res) => {
 
         const { user } = req.query;
 
-        const contacts = await EmergencyContact.find({ user });
-
+       const contacts = await EmergencyContact.find({
+            user: req.user.id
+        });
         res.json(contacts);
 
     } catch (error) {

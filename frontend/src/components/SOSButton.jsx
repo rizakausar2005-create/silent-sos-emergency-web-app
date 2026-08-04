@@ -4,34 +4,55 @@ import { useState } from "react";
 function SOSButton() {
 
   const [alertActive, setAlertActive] = useState(false);
+
   async function handleSOS() {
 
-  try {
+    if (!navigator.geolocation) {
 
-    const response = await API.post("/alert", {
+      alert("Geolocation is not supported.");
 
-      user: localStorage.getItem("userId"),
-      // Temporary Location
-      latitude: 30.3165,
-      longitude: 78.0322
+      return;
 
-    });
+    }
 
-    alert(response.data.message);
+    navigator.geolocation.getCurrentPosition(
 
-    setAlertActive(true);
+      async (position) => {
+
+        try {
+
+          const response = await API.post("/alert", {
+
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+
+          });
+
+          alert(response.data.message);
+
+          setAlertActive(true);
+
+        }
+
+        catch (error) {
+
+          console.log(error);
+
+          alert("Failed to send SOS Alert");
+
+        }
+
+      },
+
+      () => {
+
+        alert("Unable to get your location.");
+
+      }
+
+    );
 
   }
-
-  catch (error) {
-
-    console.log(error);
-
-    alert("Failed to send SOS Alert");
-
-  }
-
-}
 
   return (
     <div>
@@ -39,30 +60,20 @@ function SOSButton() {
       {
         alertActive ? (
           <>
-            <h3>
-              🔴 SOS ACTIVE
-            </h3>
+            <h3>🔴 SOS ACTIVE</h3>
 
-            <p>
-              Emergency alert has been activated.
-            </p>
+            <p>Emergency alert has been activated.</p>
 
-            <button
-              onClick={() => setAlertActive(false)}
-            >
+            <button onClick={() => setAlertActive(false)}>
               Cancel Alert
             </button>
           </>
         ) : (
           <>
-            <h3>
-              🟢 System Ready
-            </h3>
+            <h3>🟢 System Ready</h3>
 
-            <button
-              onClick={handleSOS}
-            >
-               Send SOS
+            <button onClick={handleSOS}>
+              Send SOS
             </button>
           </>
         )

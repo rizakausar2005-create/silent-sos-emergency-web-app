@@ -5,10 +5,10 @@ const createAlert = async (req, res) => {
 
     try {
 
-        const { user, latitude, longitude } = req.body;
+        const {latitude, longitude } = req.body;
 
         const newAlert = new Alert({
-            user,
+            user: req.user.id,
             latitude,
             longitude
         });
