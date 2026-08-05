@@ -1,0 +1,40 @@
+.alert-status{
+    text-align:center;
+}
+
+.status-badge{
+    display:inline-block;
+    padding:10px 18px;
+    border-radius:30px;
+    background:#198754;
+    color:white;
+    font-weight:600;
+    margin:15px 0;
+}
+
+.status-details{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    margin-top:20px;
+}
+
+.status-item{
+    background:#f8f9fa;
+    border:1px solid #e9ecef;
+    border-radius:10px;
+    padding:15px;
+}
+
+.status-label{
+    display:block;
+    color:#6c757d;
+    font-size:14px;
+    margin-bottom:5px;
+}
+
+.status-value{
+    margin:0;
+    font-size:18px;
+    font-weight:600;
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import "./AlertHistory.css";
 
 function AlertHistory() {
 
@@ -30,54 +31,70 @@ function AlertHistory() {
   }
 
   return (
-    <div
-      style={{
-        border: "1px solid gray",
-        padding: "15px",
-        marginTop: "20px",
-        borderRadius: "8px",
-      }}
-    >
+    <div className="history-container">
+      
 
       <h3>Alert History</h3>
 
       {
         alerts.length === 0 ? (
 
-          <p>No Alerts Found</p>
+          <p className="empty-history">No Alerts Found</p>
 
         ) : (
 
           alerts.map((alert) => (
 
-            <div
-              key={alert._id}
-              style={{
-                borderBottom: "1px solid #ccc",
-                marginBottom: "10px",
-                paddingBottom: "10px"
-              }}
-            >
+           <div
+    key={alert._id}
+    className="history-card"
+>
 
-              <p>
-                <strong>Latitude:</strong> {alert.latitude}
-              </p>
+    <div className="history-status">
 
-              <p>
-                <strong>Longitude:</strong> {alert.longitude}
-              </p>
+        {alert.status === "Active"
+            ? "🟢 Active"
+            : "🔴 Resolved"}
 
-              <p>
-                <strong>Status:</strong> {alert.status}
-              </p>
+    </div>
 
-              <p>
-                <strong>Date:</strong>{" "}
-                {new Date(alert.createdAt).toLocaleString()}
-              </p>
+    <div className="history-item">
 
-            </div>
+        <div className="history-label">
+            Latitude
+        </div>
 
+        <div className="history-value">
+            {alert.latitude}
+        </div>
+
+    </div>
+
+    <div className="history-item">
+
+        <div className="history-label">
+            Longitude
+        </div>
+
+        <div className="history-value">
+            {alert.longitude}
+        </div>
+
+    </div>
+
+    <div className="history-item">
+
+        <div className="history-label">
+            Date & Time
+        </div>
+
+        <div className="history-value">
+            {new Date(alert.createdAt).toLocaleString()}
+        </div>
+
+    </div>
+
+</div>
           ))
 
         )

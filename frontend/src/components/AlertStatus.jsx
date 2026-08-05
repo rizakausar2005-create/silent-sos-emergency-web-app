@@ -1,28 +1,51 @@
+import "./AlertStatus.css";
+
 function AlertStatus() {
+
   return (
-    <div
-      style={{
-        border: "1px solid gray",
-        padding: "15px",
-        marginTop: "20px",
-        borderRadius: "8px",
-      }}
-    >
-      <h3>Alert Status</h3>
 
-      <p>
-        <strong>Status:</strong> Active
-      </p>
+    <div className="alert-status">
 
-      <p>
-        <strong>Location:</strong> Shared
-      </p>
+      <h3>
+        Current Status
+      </h3>
 
-      <p>
-        <strong>Time:</strong> 10:45 PM
-      </p>
+      <div className="status-badge">
+        🟢 Active
+      </div>
+
+      <div className="status-details">
+
+        <div className="status-item">
+
+          <span className="status-label">
+            Location
+          </span>
+
+          <p className="status-value">
+            Shared
+          </p>
+
+        </div>
+
+        <div className="status-item">
+
+          <span className="status-label">
+            Last Updated
+          </span>
+
+          <p className="status-value">
+            10:45 PM
+          </p>
+
+        </div>
+
+      </div>
+
     </div>
+
   );
+
 }
 
 export default AlertStatus;
