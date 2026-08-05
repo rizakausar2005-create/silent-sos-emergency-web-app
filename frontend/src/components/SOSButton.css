@@ -1,0 +1,43 @@
+.sos-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sos-button{
+    width:220px !important;
+    height:220px !important;
+
+    border-radius:50% !important;
+
+    background:#dc3545 !important;
+
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+
+    border:none !important;
+
+    color:white !important;
+
+    font-size:34px;
+    font-weight:bold;
+}
+.sos-button:hover{
+    background:#bb2d3b;
+    transform:scale(1.03);
+}
+
+.sos-button:active{
+    transform:scale(.98);
+}
+
+.sos-status{
+    margin-top:20px;
+    font-size:18px;
+    font-weight:600;
+}
+
+.cancel-btn{
+    margin-top:20px;
+}

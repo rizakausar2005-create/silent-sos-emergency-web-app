@@ -1,5 +1,6 @@
 import API from "../services/api";
 import { useState } from "react";
+import "./SOSButton.css";
 
 function SOSButton() {
 
@@ -55,32 +56,54 @@ function SOSButton() {
   }
 
   return (
-    <div>
 
-      {
-        alertActive ? (
-          <>
-            <h3>🔴 SOS ACTIVE</h3>
+<div className="sos-container">
 
-            <p>Emergency alert has been activated.</p>
+{
+alertActive ? (
 
-            <button onClick={() => setAlertActive(false)}>
-              Cancel Alert
-            </button>
-          </>
-        ) : (
-          <>
-            <h3>🟢 System Ready</h3>
+<>
 
-            <button onClick={handleSOS}>
-              Send SOS
-            </button>
-          </>
-        )
-      }
+<h4 className="text-danger">
+🔴 SOS ACTIVE
+</h4>
 
-    </div>
-  );
+<p className="sos-status">
+Emergency alert has been activated.
+</p>
+
+<button
+className="btn btn-outline-danger cancel-btn"
+onClick={() => setAlertActive(false)}
+>
+Cancel Alert
+</button>
+
+</>
+
+) : (
+
+<>
+
+<button
+className="sos-button"
+onClick={handleSOS}
+>
+SOS
+</button>
+
+<p className="sos-status">
+Press only during an emergency.
+</p>
+
+</>
+
+)
+}
+
+</div>
+
+);
 }
 
 export default SOSButton;
