@@ -1,0 +1,40 @@
+.location-container{
+    text-align:center;
+}
+
+.location-title{
+    margin-bottom:20px;
+    font-weight:600;
+}
+
+.location-btn{
+    min-width:180px;
+    margin-bottom:25px;
+}
+
+.location-info{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.location-item{
+    background:#f8f9fa;
+    border:1px solid #e9ecef;
+    border-radius:10px;
+    padding:15px;
+}
+
+.location-label{
+    display:block;
+    font-size:14px;
+    color:#6c757d;
+    margin-bottom:5px;
+}
+
+.location-value{
+    font-size:18px;
+    font-weight:600;
+    margin:0;
+    word-break:break-word;
+}

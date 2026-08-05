@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
+import "./EmergencyContacts.css";
 
 function EmergencyContacts() {
 
@@ -148,9 +149,13 @@ catch (error) {
       </h3>
 
 
-      <form onSubmit={addContact}>
+      <form
+          className="contacts-form"
+          onSubmit={addContact}
+      >
 
         <input
+          className="contacts-input"
           type="text"
           name="name"
           placeholder="Contact Name"
@@ -159,10 +164,10 @@ catch (error) {
         />
 
 
-        <br />
 
 
         <input
+          className="contacts-input"
           type="text"
           name="phone"
           placeholder="Phone Number"
@@ -171,9 +176,9 @@ catch (error) {
         />
 
 
-        <br />
 
 <input
+  className="contacts-input"
   type="text"
   name="relationship"
   placeholder="Relationship"
@@ -181,10 +186,12 @@ catch (error) {
   onChange={handleChange}
 />
 
-<br />
 
 
-        <button type="submit">
+        <button 
+        type="submit"
+        className="btn btn-dark contact-btn"
+        >
           {editingId ? "Update Contact" : "Add Contact"}
         </button>
 
@@ -193,30 +200,50 @@ catch (error) {
 
 
 
-      <h4>
+      <h4 className="saved-title">
         Saved Contacts
       </h4>
 
 
       {contacts.map((item) => (
-  <div key={item._id}>
+        <div
+key={item._id}
+className="contact-card"
+>
 
-    <p>
-      {item.name} | {item.phone} | {item.relationship}
-    </p>
+<div className="contact-name">
+👤 {item.name}
+</div>
 
+<div className="contact-info">
 
-    <button onClick={() => editContact(item)}>
-      ✏️ Edit
-    </button>
+📞 {item.phone}
 
-    <button onClick={() => deleteContact(item._id)}>
-      🗑 Delete
-    </button>
+<br />
 
-    <hr />
+🤝 {item.relationship}
 
-  </div>
+</div>
+
+<div className="contact-actions">
+
+<button
+className="btn btn-warning btn-sm"
+onClick={() => editContact(item)}
+>
+Edit
+</button>
+
+<button
+className="btn btn-danger btn-sm"
+onClick={() => deleteContact(item._id)}
+>
+Delete
+</button>
+
+</div>
+
+</div>
 ))}
 
     </div>

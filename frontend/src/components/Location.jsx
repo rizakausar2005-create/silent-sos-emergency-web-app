@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Location.css";
 
 function Location() {
 
@@ -38,25 +39,50 @@ function Location() {
 
   return (
 
-    <div>
+<div className="location-container">
 
-      <h3>📍 Live Location</h3>
+    <h3 className="location-title">
+        📍 Live Location
+    </h3>
 
-      <button onClick={getLocation}>
+    <button
+        className="btn btn-dark location-btn"
+        onClick={getLocation}
+    >
         Get My Location
-      </button>
+    </button>
 
-      <p>
-        Latitude: {location.latitude || "Not Available"}
-      </p>
+    <div className="location-info">
 
-      <p>
-        Longitude: {location.longitude || "Not Available"}
-      </p>
+        <div className="location-item">
+
+            <span className="location-label">
+                Latitude
+            </span>
+
+            <p className="location-value">
+                {location.latitude || "Not Available"}
+            </p>
+
+        </div>
+
+        <div className="location-item">
+
+            <span className="location-label">
+                Longitude
+            </span>
+
+            <p className="location-value">
+                {location.longitude || "Not Available"}
+            </p>
+
+        </div>
 
     </div>
 
-  );
+</div>
+
+);
 
 }
 
