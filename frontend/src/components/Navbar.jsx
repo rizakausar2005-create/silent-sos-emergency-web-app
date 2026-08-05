@@ -1,33 +1,84 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar() {
+
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
+
+  function handleLogout() {
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("email");
+
+    alert("Logged Out Successfully");
+
+    navigate("/login");
+
+  }
+
   return (
+
     <nav className="navbar">
 
-      <h2>Silent SOS</h2>
+      <Link to="/" className="logo">
+        Silent SOS
+      </Link>
 
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
+      <div className="nav-links">
 
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
+        <Link to="/">
+          Home
+        </Link>
 
-        <li>
-          <Link to="/register">Register</Link>
-        </li>
+        <Link to="/about">
+          About
+        </Link>
 
-        <li>
-          <Link to="/dashboard">Dashboard</Link>
-        </li>
+        {!token ? (
 
-      </ul>
+          <>
+
+            <Link to="/login">
+              Login
+            </Link>
+
+            <Link
+              to="/register"
+              className="register-btn"
+            >
+              Register
+            </Link>
+
+          </>
+
+        ) : (
+
+          <>
+
+            <Link to="/dashboard">
+              Dashboard
+            </Link>
+
+            <button
+              className="logout-btn-nav"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+
+          </>
+
+        )}
+
+      </div>
 
     </nav>
+
   );
+
 }
 
 export default Navbar;

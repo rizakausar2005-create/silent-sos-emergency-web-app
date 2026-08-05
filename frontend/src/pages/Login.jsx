@@ -1,7 +1,8 @@
 // LOGIN PAGE TEST
 import { useState } from "react";
 import API from "../services/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import "./Auth.css";
 function Login() {
 
   const [loginData, setLoginData] = useState({
@@ -34,7 +35,10 @@ localStorage.setItem("token", response.data.token);
 localStorage.setItem("userId", response.data.userId);
 
 // Save Email
-localStorage.setItem("email", loginData.email);
+localStorage.setItem("email", response.data.email);
+
+//save name
+localStorage.setItem("name", response.data.name);
 
 console.log(response.data);
 
@@ -60,40 +64,64 @@ navigate("/dashboard");
 
 
   return (
-    <div>
 
-      <h1>Login</h1>
+<div className="auth-container">
 
-      <form onSubmit={handleSubmit}>
+    <div className="auth-card">
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter Email"
-          value={loginData.email}
-          onChange={handleChange}
-        />
+        <h1 className="auth-title">
+            Silent SOS
+        </h1>
 
-        <br />
+        <p className="auth-subtitle">
+            Sign in to continue
+        </p>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter Password"
-          value={loginData.password}
-          onChange={handleChange}
-        />
+        <form
+            className="auth-form"
+            onSubmit={handleSubmit}
+        >
 
-        <br />
+            <input
+                className="auth-input"
+                type="email"
+                name="email"
+                placeholder="Enter Email"
+                value={loginData.email}
+                onChange={handleChange}
+            />
 
-        <button type="submit">
-          Login
-        </button>
+            <input
+                className="auth-input"
+                type="password"
+                name="password"
+                placeholder="Enter Password"
+                value={loginData.password}
+                onChange={handleChange}
+            />
 
-      </form>
+            <button
+                className="btn btn-dark auth-btn"
+                type="submit"
+            >
+                Login
+            </button>
+
+        </form>
+
+        <p className="auth-footer">
+          Don't have an account?
+          <br />
+          <Link to="/register">
+            Register here
+          </Link>
+        </p>
 
     </div>
-  );
+
+</div>
+
+);
 }
 
 
