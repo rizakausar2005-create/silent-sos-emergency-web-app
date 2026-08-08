@@ -1,3 +1,25 @@
+.notified-contacts {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+}
+
+.notified-contacts h5 {
+    margin-bottom: 10px;
+}
+
+.contacts-notified-message {
+    margin-bottom: 10px;
+}
+
+.notified-contact {
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background-color: white;
+}
 .sos-container{
     display: flex;
     flex-direction: column;

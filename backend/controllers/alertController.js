@@ -8,32 +8,67 @@ const createAlert = async (req, res) => {
 
         const { latitude, longitude } = req.body;
 
-        const newAlert = new Alert({
-            user: req.user.id,
-            latitude,
-            longitude,
-            status: "Active"
+
+        // Get the logged-in user's emergency contacts
+        const contacts = await Contact.find({
+            user: req.user.id
         });
+
+
+        // Create SOS alert
+        const newAlert = new Alert({
+
+            user: req.user.id,
+
+            latitude,
+
+            longitude,
+
+            status: "Active"
+
+        });
+
 
         await newAlert.save();
 
+
+        // Prepare contact information
+        const notifiedContacts = contacts.map((contact) => ({
+
+            name: contact.name,
+
+            phone: contact.phone,
+
+            relationship: contact.relationship
+
+        }));
+
+
         res.status(201).json({
+
             message: "SOS Alert Sent Successfully",
-            alert: newAlert
+
+            alert: newAlert,
+
+            notifiedContacts
+
         });
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.log(error);
 
         res.status(500).json({
+
             message: "Failed to Send SOS Alert"
+
         });
 
     }
 
 };
-
 
 // Cancel / Resolve SOS Alert
 const cancelAlert = async (req, res) => {

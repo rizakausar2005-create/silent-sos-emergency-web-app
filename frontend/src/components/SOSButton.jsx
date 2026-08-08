@@ -1,17 +1,21 @@
+import { useState } from "react";
 import API from "../services/api";
 import "./SOSButton.css";
 
 function SOSButton({ alerts = [], onAlertChange }) {
 
-  // Find the currently active SOS alert
+  // Find currently active SOS alert
   const activeAlert = alerts.find(
     (alert) => alert.status === "Active"
   );
 
+  // Store contacts returned when SOS is activated
+  const [notifiedContacts, setNotifiedContacts] = useState([]);
 
-  // -----------------------------
+
+  // ==========================================
   // SEND SOS
-  // -----------------------------
+  // ==========================================
 
   async function handleSOS() {
 
@@ -53,6 +57,12 @@ function SOSButton({ alerts = [], onAlertChange }) {
           alert(response.data.message);
 
 
+          // Get emergency contacts returned by backend
+          setNotifiedContacts(
+            response.data.notifiedContacts || []
+          );
+
+
           // Refresh alerts immediately
           await onAlertChange();
 
@@ -80,9 +90,9 @@ function SOSButton({ alerts = [], onAlertChange }) {
   }
 
 
-  // -----------------------------
+  // ==========================================
   // CANCEL SOS
-  // -----------------------------
+  // ==========================================
 
   async function handleCancel() {
 
@@ -106,7 +116,10 @@ function SOSButton({ alerts = [], onAlertChange }) {
       alert(response.data.message);
 
 
-      // VERY IMPORTANT
+      // Clear notified contacts
+      setNotifiedContacts([]);
+
+
       // Fetch updated alerts from MongoDB
       await onAlertChange();
 
@@ -128,7 +141,9 @@ function SOSButton({ alerts = [], onAlertChange }) {
     <div className="sos-container">
 
 
-      {/* ACTIVE SOS */}
+      {/* =====================================
+          ACTIVE SOS
+      ===================================== */}
 
       {activeAlert ? (
 
@@ -144,6 +159,62 @@ function SOSButton({ alerts = [], onAlertChange }) {
           </p>
 
 
+          {/* Emergency Contacts */}
+
+          <div className="notified-contacts">
+
+            <h5>
+              📞 Emergency Contacts
+            </h5>
+
+
+            {notifiedContacts.length > 0 ? (
+
+              <>
+
+                <p className="contacts-notified-message">
+                  Emergency contacts associated with this SOS:
+                </p>
+
+
+                {notifiedContacts.map((contact, index) => (
+
+                  <div
+                    key={index}
+                    className="notified-contact"
+                  >
+
+                    <strong>
+                      👤 {contact.name}
+                    </strong>
+
+                    <br />
+
+                    📞 {contact.phone}
+
+                    <br />
+
+                    🤝 {contact.relationship}
+
+                  </div>
+
+                ))}
+
+              </>
+
+            ) : (
+
+              <p>
+                No emergency contacts added.
+              </p>
+
+            )}
+
+          </div>
+
+
+          {/* Cancel */}
+
           <button
             className="btn btn-outline-danger cancel-btn"
             onClick={handleCancel}
@@ -157,7 +228,9 @@ function SOSButton({ alerts = [], onAlertChange }) {
       ) : (
 
 
-        /* NORMAL SOS BUTTON */
+        /* =====================================
+           NORMAL SOS BUTTON
+        ===================================== */
 
         <>
 
