@@ -5,25 +5,25 @@ import "./EmergencyContacts.css";
 function EmergencyContacts() {
 
   const [contact, setContact] = useState({
-    
-  name: "",
-  phone: "",
-  relationship: ""
-});
-
+    name: "",
+    phone: "",
+    relationship: ""
+  });
 
   const [editingId, setEditingId] = useState(null);
 
-
   const [contacts, setContacts] = useState([]);
+
+
+  // Fetch contacts when component loads
   useEffect(() => {
 
     fetchContacts();
 
-}, []);
+  }, []);
 
 
-
+  // Handle input changes
   function handleChange(e) {
 
     setContact({
@@ -33,115 +33,182 @@ function EmergencyContacts() {
 
   }
 
+
+  // Fetch all contacts
   async function fetchContacts() {
 
     try {
 
-        const response = await API.get("/contacts");
+      const response = await API.get("/contacts");
 
-        setContacts(response.data);
+      setContacts(response.data);
 
     }
 
     catch (error) {
 
-        console.log(error);
+      console.log("Failed to load contacts:", error);
 
     }
 
-}
-async function deleteContact(id) {
-
-  try {
-
-    const response = await API.delete(`/contacts/${id}`);
-
-    alert(response.data.message);
-
-    fetchContacts();
-
-  } catch (error) {
-
-    console.log(error);
-
-    alert("Failed to Delete Contact");
-
   }
 
-}
 
-
-function editContact(item) {
-
-  setContact({
-    name: item.name,
-    phone: item.phone,
-    relationship: item.relationship
-  });
-
-  setEditingId(item._id);
-
-}
-
-
-
+  // Add / Update contact
   async function addContact(e) {
 
     e.preventDefault();
 
+
+    // Basic validation
+    if (
+      !contact.name.trim() ||
+      !contact.phone.trim() ||
+      !contact.relationship.trim()
+    ) {
+
+      alert("Please fill all contact details.");
+
+      return;
+
+    }
+
+
     try {
 
-    let response;
+      let response;
 
-    if (editingId) {
 
-        response = await API.put(`/contacts/${editingId}`, {
+      // UPDATE
+      if (editingId) {
 
+        response = await API.put(
+          `/contacts/${editingId}`,
+          {
             name: contact.name,
             phone: contact.phone,
             relationship: contact.relationship
+          }
+        );
 
-        });
+      }
 
-    }
 
-    else {
+      // ADD
+      else {
 
-        response = await API.post("/contacts", {
-
+        response = await API.post(
+          "/contacts",
+          {
             name: contact.name,
             phone: contact.phone,
             relationship: contact.relationship
+          }
+        );
 
-        });
+      }
 
-    }
 
-    alert(response.data.message);
+      alert(response.data.message);
 
-    fetchContacts();
 
-    setContact({
+      // Refresh contacts
+      await fetchContacts();
+
+
+      // Clear form
+      setContact({
         name: "",
         phone: "",
         relationship: ""
+      });
+
+
+      setEditingId(null);
+
+    }
+
+    catch (error) {
+
+      console.log(error);
+
+      alert("Operation Failed");
+
+    }
+
+  }
+
+
+  // Edit contact
+  function editContact(item) {
+
+    setContact({
+      name: item.name,
+      phone: item.phone,
+      relationship: item.relationship
+    });
+
+    setEditingId(item._id);
+
+  }
+
+
+  // Delete contact
+  async function deleteContact(id) {
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this contact?"
+    );
+
+
+    if (!confirmDelete) {
+
+      return;
+
+    }
+
+
+    try {
+
+      const response = await API.delete(
+        `/contacts/${id}`
+      );
+
+
+      alert(response.data.message);
+
+
+      await fetchContacts();
+
+    }
+
+    catch (error) {
+
+      console.log(error);
+
+      alert("Failed to Delete Contact");
+
+    }
+
+  }
+
+
+  // Cancel editing
+  function cancelEdit() {
+
+    setContact({
+      name: "",
+      phone: "",
+      relationship: ""
     });
 
     setEditingId(null);
 
-}
-
-catch (error) {
-
-    console.log(error);
-
-    alert("Operation Failed");
-
-}
-}
+  }
 
 
   return (
+
     <div>
 
       <h3>
@@ -149,10 +216,15 @@ catch (error) {
       </h3>
 
 
+      {/* Contact Form */}
+
       <form
-          className="contacts-form"
-          onSubmit={addContact}
+        className="contacts-form"
+        onSubmit={addContact}
       >
+
+
+        {/* Name */}
 
         <input
           className="contacts-input"
@@ -164,11 +236,11 @@ catch (error) {
         />
 
 
-
+        {/* Phone */}
 
         <input
           className="contacts-input"
-          type="text"
+          type="tel"
           name="phone"
           placeholder="Phone Number"
           value={contact.phone}
@@ -176,77 +248,134 @@ catch (error) {
         />
 
 
+        {/* Relationship */}
 
-<input
-  className="contacts-input"
-  type="text"
-  name="relationship"
-  placeholder="Relationship"
-  value={contact.relationship}
-  onChange={handleChange}
-/>
+        <input
+          className="contacts-input"
+          type="text"
+          name="relationship"
+          placeholder="Relationship (e.g. Mother, Father)"
+          value={contact.relationship}
+          onChange={handleChange}
+        />
 
 
+        {/* Submit */}
 
-        <button 
-        type="submit"
-        className="btn btn-dark contact-btn"
+        <button
+          type="submit"
+          className="btn btn-dark contact-btn"
         >
-          {editingId ? "Update Contact" : "Add Contact"}
+
+          {editingId
+            ? "Update Contact"
+            : "Add Contact"
+          }
+
         </button>
 
+
+        {/* Cancel Edit */}
+
+        {editingId && (
+
+          <button
+            type="button"
+            className="btn btn-secondary contact-btn"
+            onClick={cancelEdit}
+          >
+            Cancel
+          </button>
+
+        )}
 
       </form>
 
 
+      {/* Saved Contacts */}
 
       <h4 className="saved-title">
         Saved Contacts
       </h4>
 
 
-      {contacts.map((item) => (
-        <div
-key={item._id}
-className="contact-card"
->
+      {contacts.length === 0 ? (
 
-<div className="contact-name">
-👤 {item.name}
-</div>
+        <p>
+          No emergency contacts added yet.
+        </p>
 
-<div className="contact-info">
+      ) : (
 
-📞 {item.phone}
+        contacts.map((item) => (
 
-<br />
+          <div
+            key={item._id}
+            className="contact-card"
+          >
 
-🤝 {item.relationship}
 
-</div>
+            {/* Contact Name */}
 
-<div className="contact-actions">
+            <div className="contact-name">
 
-<button
-className="btn btn-warning btn-sm"
-onClick={() => editContact(item)}
->
-Edit
-</button>
+              👤 <strong>
+                {item.name}
+              </strong>
 
-<button
-className="btn btn-danger btn-sm"
-onClick={() => deleteContact(item._id)}
->
-Delete
-</button>
+            </div>
 
-</div>
 
-</div>
-))}
+            {/* Phone */}
+
+            <div className="contact-info">
+
+              📞 {item.phone}
+
+            </div>
+
+
+            {/* Relationship */}
+
+            <div className="contact-info">
+
+              🤝 {item.relationship}
+
+            </div>
+
+
+            {/* Buttons */}
+
+            <div className="contact-actions">
+
+              <button
+                className="btn btn-warning btn-sm"
+                onClick={() => editContact(item)}
+              >
+                Edit
+              </button>
+
+
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={() => deleteContact(item._id)}
+              >
+                Delete
+              </button>
+
+            </div>
+
+
+          </div>
+
+        ))
+
+      )}
 
     </div>
+
   );
+
 }
+
 export default EmergencyContacts;
