@@ -54,7 +54,26 @@ function SOSButton({ alerts = [], onAlertChange }) {
           });
 
 
-          alert(response.data.message);
+          const contacts = response.data.notifiedContacts || [];
+
+          if (contacts.length > 0) {
+
+          alert(
+            `🚨 SOS Alert Activated!\n\n` +
+            `📍 Your location has been recorded.\n` +
+            `📞 ${contacts.length} emergency contact(s) identified.\n` +
+            `✅ Notification process initiated.`
+        );
+
+      } else {
+
+        alert(
+          `🚨 SOS Alert Activated!\n\n` +
+          `📍 Your location has been recorded.\n` +
+          `⚠️ No emergency contacts found.`
+        );
+
+      }
 
 
           // Get emergency contacts returned by backend
