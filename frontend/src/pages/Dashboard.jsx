@@ -14,18 +14,28 @@ function Dashboard() {
 
   const navigate = useNavigate();
 
-  // Dashboard statistics
+  // ==========================================
+  // DASHBOARD STATISTICS
+  // ==========================================
+
   const [stats, setStats] = useState({
     totalAlerts: 0,
     totalContacts: 0,
     status: "Active"
   });
 
-  // All alerts from database
+
+  // ==========================================
+  // ALL USER ALERTS
+  // ==========================================
+
   const [alerts, setAlerts] = useState([]);
 
 
-  // Check login + load dashboard data
+  // ==========================================
+  // CHECK LOGIN + LOAD DATA
+  // ==========================================
+
   useEffect(() => {
 
     const token = localStorage.getItem("token");
@@ -40,13 +50,28 @@ function Dashboard() {
 
     }
 
-    fetchDashboardStats();
-    fetchAlerts();
+    loadDashboardData();
 
   }, [navigate]);
 
 
-  // Fetch dashboard statistics
+  // ==========================================
+  // LOAD ALL DASHBOARD DATA
+  // ==========================================
+
+  async function loadDashboardData() {
+
+    await fetchDashboardStats();
+
+    await fetchAlerts();
+
+  }
+
+
+  // ==========================================
+  // FETCH DASHBOARD STATISTICS
+  // ==========================================
+
   async function fetchDashboardStats() {
 
     try {
@@ -55,16 +80,24 @@ function Dashboard() {
 
       setStats(response.data);
 
-    } catch (error) {
+    }
 
-      console.log("Failed to load dashboard stats:", error);
+    catch (error) {
+
+      console.log(
+        "Failed to load dashboard stats:",
+        error
+      );
 
     }
 
   }
 
 
-  // Fetch all alerts
+  // ==========================================
+  // FETCH ALERTS
+  // ==========================================
+
   async function fetchAlerts() {
 
     try {
@@ -73,26 +106,35 @@ function Dashboard() {
 
       setAlerts(response.data);
 
-    } catch (error) {
+    }
 
-      console.log("Failed to load alerts:", error);
+    catch (error) {
+
+      console.log(
+        "Failed to load alerts:",
+        error
+      );
 
     }
 
   }
 
 
-  // Called whenever an SOS is created or cancelled
+  // ==========================================
+  // REFRESH AFTER SOS / CANCEL
+  // ==========================================
+
   async function handleAlertChange() {
 
-    await fetchAlerts();
-
-    await fetchDashboardStats();
+    await loadDashboardData();
 
   }
 
 
-  // Logout
+  // ==========================================
+  // LOGOUT
+  // ==========================================
+
   function handleLogout() {
 
     localStorage.removeItem("token");
@@ -107,11 +149,18 @@ function Dashboard() {
   }
 
 
+  // ==========================================
+  // DASHBOARD UI
+  // ==========================================
+
   return (
 
     <div className="dashboard-container">
 
-      {/* Header */}
+
+      {/* =====================================
+          HEADER
+      ===================================== */}
 
       <div className="dashboard-header">
 
@@ -121,9 +170,10 @@ function Dashboard() {
             Silent SOS Dashboard
           </h1>
 
+
           <p className="dashboard-subtitle">
 
-            Welcome back,{" "}
+            Welcome back{" "}
 
             <strong>
               {localStorage.getItem("name")}
@@ -131,13 +181,16 @@ function Dashboard() {
 
           </p>
 
+
           <p
             style={{
               color: "#6c757d",
               marginTop: "-8px"
             }}
           >
+
             {localStorage.getItem("email")}
+
           </p>
 
         </div>
@@ -153,15 +206,23 @@ function Dashboard() {
       </div>
 
 
-      {/* Statistics */}
+
+      {/* =====================================
+          STATISTICS
+      ===================================== */}
 
       <div className="row mb-4">
+
+
+        {/* TOTAL ALERTS */}
 
         <div className="col-md-4">
 
           <div className="dashboard-card text-center">
 
-            <h6>Total Alerts</h6>
+            <h6>
+              Total Alerts
+            </h6>
 
             <h2>
               {stats.totalAlerts}
@@ -172,11 +233,16 @@ function Dashboard() {
         </div>
 
 
+
+        {/* TOTAL CONTACTS */}
+
         <div className="col-md-4">
 
           <div className="dashboard-card text-center">
 
-            <h6>Emergency Contacts</h6>
+            <h6>
+              Emergency Contacts
+            </h6>
 
             <h2>
               {stats.totalContacts}
@@ -187,13 +253,22 @@ function Dashboard() {
         </div>
 
 
+
+        {/* SYSTEM STATUS */}
+
         <div className="col-md-4">
 
           <div className="dashboard-card text-center">
 
-            <h6>System Status</h6>
+            <h6>
+              System Status
+            </h6>
 
-            <h2 style={{ color: "#198754" }}>
+            <h2
+              style={{
+                color: "#198754"
+              }}
+            >
               {stats.status}
             </h2>
 
@@ -204,12 +279,17 @@ function Dashboard() {
       </div>
 
 
-      {/* Main Dashboard */}
+
+      {/* =====================================
+          MAIN DASHBOARD
+      ===================================== */}
 
       <div className="row g-4">
 
 
-        {/* SOS */}
+        {/* ===================================
+            SOS
+        =================================== */}
 
         <div className="col-lg-6">
 
@@ -218,6 +298,7 @@ function Dashboard() {
             <h3 className="card-title">
               🚨 Emergency SOS
             </h3>
+
 
             <SOSButton
               alerts={alerts}
@@ -229,7 +310,10 @@ function Dashboard() {
         </div>
 
 
-        {/* Location */}
+
+        {/* ===================================
+            LOCATION
+        =================================== */}
 
         <div className="col-lg-6">
 
@@ -239,6 +323,7 @@ function Dashboard() {
               📍 Current Location
             </h3>
 
+
             <Location />
 
           </div>
@@ -246,7 +331,10 @@ function Dashboard() {
         </div>
 
 
-        {/* Alert Status */}
+
+        {/* ===================================
+            ALERT STATUS
+        =================================== */}
 
         <div className="col-lg-6">
 
@@ -255,6 +343,7 @@ function Dashboard() {
             <h3 className="card-title">
               🚦 Alert Status
             </h3>
+
 
             <AlertStatus
               alerts={alerts}
@@ -265,7 +354,10 @@ function Dashboard() {
         </div>
 
 
-        {/* Alert History */}
+
+        {/* ===================================
+            ALERT HISTORY
+        =================================== */}
 
         <div className="col-lg-6">
 
@@ -274,6 +366,7 @@ function Dashboard() {
             <h3 className="card-title">
               📜 Alert History
             </h3>
+
 
             <AlertHistory
               alerts={alerts}
@@ -284,7 +377,10 @@ function Dashboard() {
         </div>
 
 
-        {/* Emergency Contacts */}
+
+        {/* ===================================
+            EMERGENCY CONTACTS
+        =================================== */}
 
         <div className="col-12">
 
@@ -293,6 +389,7 @@ function Dashboard() {
             <h3 className="card-title">
               📞 Emergency Contacts
             </h3>
+
 
             <EmergencyContacts />
 

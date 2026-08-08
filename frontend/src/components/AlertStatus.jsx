@@ -2,6 +2,8 @@ import "./AlertStatus.css";
 
 function AlertStatus({ alerts = [] }) {
 
+  // Alerts are already coming from Dashboard.jsx
+  // and are sorted newest first by the backend.
   const latestAlert = alerts.length > 0
     ? alerts[0]
     : null;
@@ -15,6 +17,10 @@ function AlertStatus({ alerts = [] }) {
         Current Status
       </h3>
 
+
+      {/* =====================================
+          NO ALERTS
+      ===================================== */}
 
       {!latestAlert ? (
 
@@ -60,6 +66,10 @@ function AlertStatus({ alerts = [] }) {
       ) : (
 
 
+        /* =====================================
+           LATEST ALERT
+        ===================================== */
+
         <>
 
           <div className="status-badge">
@@ -74,6 +84,9 @@ function AlertStatus({ alerts = [] }) {
 
           <div className="status-details">
 
+
+            {/* LOCATION */}
+
             <div className="status-item">
 
               <span className="status-label">
@@ -86,6 +99,8 @@ function AlertStatus({ alerts = [] }) {
 
             </div>
 
+
+            {/* LAST UPDATED */}
 
             <div className="status-item">
 
@@ -102,6 +117,7 @@ function AlertStatus({ alerts = [] }) {
               </p>
 
             </div>
+
 
           </div>
 

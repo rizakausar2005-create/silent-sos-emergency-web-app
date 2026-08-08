@@ -11,6 +11,10 @@ function AlertHistory({ alerts = [] }) {
       </h3>
 
 
+      {/* =====================================
+          NO ALERTS
+      ===================================== */}
+
       {alerts.length === 0 ? (
 
         <p className="empty-history">
@@ -18,6 +22,11 @@ function AlertHistory({ alerts = [] }) {
         </p>
 
       ) : (
+
+
+        /* =====================================
+           ALERT LIST
+        ===================================== */
 
         alerts.map((alert) => (
 
@@ -27,7 +36,7 @@ function AlertHistory({ alerts = [] }) {
           >
 
 
-            {/* Status */}
+            {/* STATUS */}
 
             <div
               className={
@@ -45,7 +54,7 @@ function AlertHistory({ alerts = [] }) {
             </div>
 
 
-            {/* Location */}
+            {/* LOCATION */}
 
             <div className="history-item">
 
@@ -54,13 +63,15 @@ function AlertHistory({ alerts = [] }) {
               </div>
 
               <div className="history-value">
+
                 {alert.latitude}, {alert.longitude}
+
               </div>
 
             </div>
 
 
-            {/* Date */}
+            {/* DATE & TIME */}
 
             <div className="history-item">
 
