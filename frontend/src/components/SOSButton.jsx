@@ -1,13 +1,31 @@
 import API from "../services/api";
-import { useState } from "react";
 import "./SOSButton.css";
 
-function SOSButton() {
+function SOSButton({ alerts = [], onAlertChange }) {
 
-  const [alertActive, setAlertActive] = useState(false);
+  // Find the currently active SOS alert
+  const activeAlert = alerts.find(
+    (alert) => alert.status === "Active"
+  );
+
+
+  // -----------------------------
+  // SEND SOS
+  // -----------------------------
 
   async function handleSOS() {
 
+    // Prevent multiple active alerts
+    if (activeAlert) {
+
+      alert("An SOS alert is already active.");
+
+      return;
+
+    }
+
+
+    // Check geolocation support
     if (!navigator.geolocation) {
 
       alert("Geolocation is not supported.");
@@ -15,6 +33,7 @@ function SOSButton() {
       return;
 
     }
+
 
     navigator.geolocation.getCurrentPosition(
 
@@ -25,13 +44,17 @@ function SOSButton() {
           const response = await API.post("/alert", {
 
             latitude: position.coords.latitude,
+
             longitude: position.coords.longitude
 
           });
 
+
           alert(response.data.message);
 
-          setAlertActive(true);
+
+          // Refresh alerts immediately
+          await onAlertChange();
 
         }
 
@@ -45,6 +68,7 @@ function SOSButton() {
 
       },
 
+
       () => {
 
         alert("Unable to get your location.");
@@ -55,55 +79,108 @@ function SOSButton() {
 
   }
 
+
+  // -----------------------------
+  // CANCEL SOS
+  // -----------------------------
+
+  async function handleCancel() {
+
+    // Make sure an active alert exists
+    if (!activeAlert) {
+
+      alert("No active alert found.");
+
+      return;
+
+    }
+
+
+    try {
+
+      const response = await API.put(
+        `/alert/${activeAlert._id}/cancel`
+      );
+
+
+      alert(response.data.message);
+
+
+      // VERY IMPORTANT
+      // Fetch updated alerts from MongoDB
+      await onAlertChange();
+
+    }
+
+    catch (error) {
+
+      console.log(error);
+
+      alert("Failed to Cancel Alert");
+
+    }
+
+  }
+
+
   return (
 
-<div className="sos-container">
+    <div className="sos-container">
 
-{
-alertActive ? (
 
-<>
+      {/* ACTIVE SOS */}
 
-<h4 className="text-danger">
-🔴 SOS ACTIVE
-</h4>
+      {activeAlert ? (
 
-<p className="sos-status">
-Emergency alert has been activated.
-</p>
+        <>
 
-<button
-className="btn btn-outline-danger cancel-btn"
-onClick={() => setAlertActive(false)}
->
-Cancel Alert
-</button>
+          <h4 className="text-danger">
+            🔴 SOS ACTIVE
+          </h4>
 
-</>
 
-) : (
+          <p className="sos-status">
+            Emergency alert has been activated.
+          </p>
 
-<>
 
-<button
-className="sos-button"
-onClick={handleSOS}
->
-SOS
-</button>
+          <button
+            className="btn btn-outline-danger cancel-btn"
+            onClick={handleCancel}
+          >
+            Cancel Alert
+          </button>
 
-<p className="sos-status">
-Press only during an emergency.
-</p>
+        </>
 
-</>
 
-)
-}
+      ) : (
 
-</div>
 
-);
+        /* NORMAL SOS BUTTON */
+
+        <>
+
+          <button
+            className="sos-button"
+            onClick={handleSOS}
+          >
+            SOS
+          </button>
+
+
+          <p className="sos-status">
+            Press only during an emergency.
+          </p>
+
+        </>
+
+      )}
+
+    </div>
+
+  );
+
 }
 
 export default SOSButton;

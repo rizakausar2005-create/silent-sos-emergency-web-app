@@ -1,79 +1,102 @@
 import { Link } from "react-router-dom";
+import SOSButton from "../components/SOSButton";
 import "./Home.css";
 
 function Home() {
 
   return (
+    <div className="home">
 
-    <div className="home-container">
+      <h1>
+        Silent SOS
+      </h1>
 
-      <div className="hero-section">
+      <p>
+        Stay connected during emergencies with instant SOS alerts,
+        live location sharing, and trusted emergency contacts.
+      </p>
 
-        <h1 className="hero-title">
-          Silent SOS 
-        </h1>
+      <div className="home-buttons">
 
-        <p className="hero-subtitle">
-          Stay connected during emergencies with instant SOS alerts,
-          live location sharing, and trusted emergency contacts.
-        </p>
+        <Link
+          to="/register"
+          className="btn btn-dark"
+        >
+          Get Started
+        </Link>
 
-        <div className="hero-buttons">
-
-          <Link
-            to="/register"
-            className="btn btn-dark"
-          >
-            Get Started
-          </Link>
-
-          <Link
-            to="/login"
-            className="btn btn-outline-dark"
-          >
-            Login
-          </Link>
-
-        </div>
+        <Link
+          to="/login"
+          className="btn btn-outline-dark"
+        >
+          Login
+        </Link>
 
       </div>
 
-      <div className="features-section">
+
+      {/* SOS BUTTON */}
+
+      <div className="home-sos">
+
+        <h3>
+          🚨 Emergency SOS
+        </h3>
+
+        <SOSButton />
+
+      </div>
+
+
+      <div className="home-features">
 
         <div className="feature-card">
-          <h4>🚨 One-Tap SOS</h4>
+
+          <h3>🚨 One-Tap SOS</h3>
+
           <p>
             Send an emergency alert instantly with a single click.
           </p>
+
         </div>
 
+
         <div className="feature-card">
-          <h4>📍 Live Location</h4>
+
+          <h3>📍 Live Location</h3>
+
           <p>
             Share your current location with your emergency contacts.
           </p>
+
         </div>
 
-        <div className="feature-card">
-          <h4>📞 Emergency Contacts</h4>
-          <p>
-            Store and manage trusted contacts securely.
-          </p>
-        </div>
 
         <div className="feature-card">
-          <h4>📜 Alert History</h4>
+
+          <h3>📞 Emergency Contacts</h3>
+
           <p>
-            View all your previous emergency alerts anytime.
+            Keep your trusted contacts ready during emergencies.
           </p>
+
+        </div>
+
+
+        <div className="feature-card">
+
+          <h3>📜 Alert History</h3>
+
+          <p>
+            View all your previous emergency alerts.
+          </p>
+
         </div>
 
       </div>
 
     </div>
-
   );
-
 }
 
 export default Home;

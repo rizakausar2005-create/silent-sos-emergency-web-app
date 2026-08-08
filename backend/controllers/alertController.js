@@ -1,16 +1,18 @@
 const Alert = require("../models/Alert");
+const Contact = require("../models/EmergencyContact");
 
 // Create SOS Alert
 const createAlert = async (req, res) => {
 
     try {
 
-        const {latitude, longitude } = req.body;
+        const { latitude, longitude } = req.body;
 
         const newAlert = new Alert({
             user: req.user.id,
             latitude,
-            longitude
+            longitude,
+            status: "Active"
         });
 
         await newAlert.save();
@@ -31,49 +33,105 @@ const createAlert = async (req, res) => {
     }
 
 };
-// Cancel Latest SOS Alert
+
+
+// Cancel / Resolve SOS Alert
 const cancelAlert = async (req, res) => {
 
     try {
 
-        const latestAlert = await Alert.findOne({
-            user: req.user.id
-        }).sort({ createdAt: -1 });
+        const { id } = req.params;
 
-        if (!latestAlert) {
+        // Find the alert that the user wants to cancel
+        const alert = await Alert.findOne({
+            _id: id,
+            user: req.user.id
+        });
+
+        if (!alert) {
 
             return res.status(404).json({
-                message: "No active alert found"
+                message: "Alert not found"
             });
 
         }
 
-        latestAlert.status = "Cancelled";
+        // Cancel this alert
+        alert.status = "Cancelled";
 
-        await latestAlert.save();
+        await alert.save();
 
-        res.json({
-            message: "SOS Alert Cancelled Successfully"
+
+        // Also cancel any other old active alerts
+        // belonging to this same user.
+        await Alert.updateMany(
+            {
+                user: req.user.id,
+                status: "Active"
+            },
+            {
+                $set: {
+                    status: "Cancelled"
+                }
+            }
+        );
+
+
+        res.status(200).json({
+
+            message: "SOS Alert Cancelled Successfully",
+
+            alert
+
         });
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.log(error);
 
         res.status(500).json({
-            message: "Failed to Cancel Alert"
+
+            message: "Failed to Cancel SOS Alert"
+
         });
 
     }
 
 };
 
-const getDashboardStats = async (req, res) => {
+
+// Get Logged-in User Alerts
+const getAlerts = async (req, res) => {
 
     try {
 
-        const Alert = require("../models/Alert");
-        const Contact = require("../models/Contact");
+        const alerts = await Alert.find({
+            user: req.user.id
+        }).sort({
+            createdAt: -1
+        });
+
+        res.json(alerts);
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            message: "Failed to Fetch Alerts"
+        });
+
+    }
+
+};
+
+
+// Dashboard Statistics
+const getDashboardStats = async (req, res) => {
+
+    try {
 
         const totalAlerts = await Alert.countDocuments({
             user: req.user.id
@@ -101,35 +159,10 @@ const getDashboardStats = async (req, res) => {
 
 };
 
-// Get Logged-in User Alerts
-const getAlerts = async (req, res) => {
 
-    try {
-
-        const alerts = await Alert.find({
-            user: req.user.id
-        }).sort({
-            createdAt: -1
-        });
-
-        res.json(alerts);
-
-    }
-
-    catch (error) {
-
-        console.log(error);
-
-        res.status(500).json({
-            message: "Failed to Fetch Alerts"
-        });
-
-    }
-
-};
 module.exports = {
     createAlert,
     cancelAlert,
-    getDashboardStats,
-    getAlerts
+    getAlerts,
+    getDashboardStats
 };

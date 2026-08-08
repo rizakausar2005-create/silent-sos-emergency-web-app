@@ -1,107 +1,94 @@
-import { useEffect, useState } from "react";
-import API from "../services/api";
 import "./AlertHistory.css";
 
-function AlertHistory() {
-
-  const [alerts, setAlerts] = useState([]);
-
-  useEffect(() => {
-    fetchAlerts();
-  }, []);
-
-  async function fetchAlerts() {
-
-    try {
-
-      const response = await API.get("/alerts");
-
-      setAlerts(response.data);
-
-    }
-
-    catch (error) {
-
-      console.log(error);
-
-      alert("Failed to Load Alert History");
-
-    }
-
-  }
+function AlertHistory({ alerts = [] }) {
 
   return (
-    <div className="history-container">
-      
 
-      <h3>Alert History</h3>
+    <div>
 
-      {
-        alerts.length === 0 ? (
+      <h3>
+        Alert History
+      </h3>
 
-          <p className="empty-history">No Alerts Found</p>
 
-        ) : (
+      {alerts.length === 0 ? (
 
-          alerts.map((alert) => (
+        <p className="empty-history">
+          No Alerts Found
+        </p>
 
-           <div
-    key={alert._id}
-    className="history-card"
->
+      ) : (
 
-    <div className="history-status">
+        alerts.map((alert) => (
 
-        {alert.status === "Active"
-            ? "🟢 Active"
-            : "🔴 Resolved"}
+          <div
+            key={alert._id}
+            className="history-card"
+          >
+
+
+            {/* Status */}
+
+            <div
+              className={
+                alert.status === "Active"
+                  ? "history-status active-status"
+                  : "history-status cancelled-status"
+              }
+            >
+
+              {alert.status === "Active"
+                ? "🔴 Active"
+                : "⚪ Cancelled"
+              }
+
+            </div>
+
+
+            {/* Location */}
+
+            <div className="history-item">
+
+              <div className="history-label">
+                📍 Location
+              </div>
+
+              <div className="history-value">
+                {alert.latitude}, {alert.longitude}
+              </div>
+
+            </div>
+
+
+            {/* Date */}
+
+            <div className="history-item">
+
+              <div className="history-label">
+                🕒 Date & Time
+              </div>
+
+              <div className="history-value">
+
+                {new Date(
+                  alert.createdAt
+                ).toLocaleString()}
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+        ))
+
+      )}
 
     </div>
 
-    <div className="history-item">
-
-        <div className="history-label">
-            Latitude
-        </div>
-
-        <div className="history-value">
-            {alert.latitude}
-        </div>
-
-    </div>
-
-    <div className="history-item">
-
-        <div className="history-label">
-            Longitude
-        </div>
-
-        <div className="history-value">
-            {alert.longitude}
-        </div>
-
-    </div>
-
-    <div className="history-item">
-
-        <div className="history-label">
-            Date & Time
-        </div>
-
-        <div className="history-value">
-            {new Date(alert.createdAt).toLocaleString()}
-        </div>
-
-    </div>
-
-</div>
-          ))
-
-        )
-      }
-
-    </div>
   );
+
 }
 
 export default AlertHistory;

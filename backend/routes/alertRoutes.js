@@ -12,7 +12,7 @@ const { createAlert ,
 
 // SOS Alert Route
 router.post("/alert", authMiddleware, createAlert);
-router.put("/alert/cancel", authMiddleware, cancelAlert);
+router.put("/alert/:id/cancel", authMiddleware, cancelAlert);
 router.get("/alerts", authMiddleware, getAlerts);
 router.get("/dashboard-stats", authMiddleware, getDashboardStats);
 

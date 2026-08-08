@@ -1,6 +1,11 @@
 import "./AlertStatus.css";
 
-function AlertStatus() {
+function AlertStatus({ alerts = [] }) {
+
+  const latestAlert = alerts.length > 0
+    ? alerts[0]
+    : null;
+
 
   return (
 
@@ -10,37 +15,99 @@ function AlertStatus() {
         Current Status
       </h3>
 
-      <div className="status-badge">
-        🟢 Active
-      </div>
 
-      <div className="status-details">
+      {!latestAlert ? (
 
-        <div className="status-item">
+        <>
 
-          <span className="status-label">
-            Location
-          </span>
+          <div className="status-badge">
+            ⚪ No Alerts
+          </div>
 
-          <p className="status-value">
-            Shared
-          </p>
 
-        </div>
+          <div className="status-details">
 
-        <div className="status-item">
+            <div className="status-item">
 
-          <span className="status-label">
-            Last Updated
-          </span>
+              <span className="status-label">
+                Location
+              </span>
 
-          <p className="status-value">
-            10:45 PM
-          </p>
+              <p className="status-value">
+                Not Available
+              </p>
 
-        </div>
+            </div>
 
-      </div>
+
+            <div className="status-item">
+
+              <span className="status-label">
+                Last Updated
+              </span>
+
+              <p className="status-value">
+                No alerts yet
+              </p>
+
+            </div>
+
+          </div>
+
+        </>
+
+
+      ) : (
+
+
+        <>
+
+          <div className="status-badge">
+
+            {latestAlert.status === "Active"
+              ? "🔴 Active"
+              : "⚪ Cancelled"
+            }
+
+          </div>
+
+
+          <div className="status-details">
+
+            <div className="status-item">
+
+              <span className="status-label">
+                Location
+              </span>
+
+              <p className="status-value">
+                📍 Shared
+              </p>
+
+            </div>
+
+
+            <div className="status-item">
+
+              <span className="status-label">
+                Last Updated
+              </span>
+
+              <p className="status-value">
+
+                {new Date(
+                  latestAlert.createdAt
+                ).toLocaleString()}
+
+              </p>
+
+            </div>
+
+          </div>
+
+        </>
+
+      )}
 
     </div>
 
