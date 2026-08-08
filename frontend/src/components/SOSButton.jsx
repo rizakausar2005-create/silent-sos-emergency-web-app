@@ -9,8 +9,39 @@ function SOSButton({ alerts = [], onAlertChange }) {
     (alert) => alert.status === "Active"
   );
 
-  // Store contacts returned when SOS is activated
+
+  // Emergency contacts associated with SOS
   const [notifiedContacts, setNotifiedContacts] = useState([]);
+
+
+  // ==========================================
+  // FETCH EMERGENCY CONTACTS
+  // ==========================================
+
+  async function fetchEmergencyContacts() {
+
+    try {
+
+      const response = await API.get("/contacts");
+
+      setNotifiedContacts(response.data || []);
+
+      return response.data || [];
+
+    }
+
+    catch (error) {
+
+      console.log(
+        "Failed to load emergency contacts:",
+        error
+      );
+
+      return [];
+
+    }
+
+  }
 
 
   // ==========================================
@@ -22,7 +53,9 @@ function SOSButton({ alerts = [], onAlertChange }) {
     // Prevent multiple active alerts
     if (activeAlert) {
 
-      alert("An SOS alert is already active.");
+      alert(
+        "An SOS alert is already active."
+      );
 
       return;
 
@@ -32,7 +65,9 @@ function SOSButton({ alerts = [], onAlertChange }) {
     // Check geolocation support
     if (!navigator.geolocation) {
 
-      alert("Geolocation is not supported.");
+      alert(
+        "Geolocation is not supported."
+      );
 
       return;
 
@@ -45,44 +80,67 @@ function SOSButton({ alerts = [], onAlertChange }) {
 
         try {
 
-          const response = await API.post("/alert", {
+          // Create SOS alert
+          const response = await API.post(
+            "/alert",
+            {
+              latitude:
+                position.coords.latitude,
 
-            latitude: position.coords.latitude,
-
-            longitude: position.coords.longitude
-
-          });
-
-
-          const contacts = response.data.notifiedContacts || [];
-
-          if (contacts.length > 0) {
-
-          alert(
-            `🚨 SOS Alert Activated!\n\n` +
-            `📍 Your location has been recorded.\n` +
-            `📞 ${contacts.length} emergency contact(s) identified.\n` +
-            `✅ Notification process initiated.`
-        );
-
-      } else {
-
-        alert(
-          `🚨 SOS Alert Activated!\n\n` +
-          `📍 Your location has been recorded.\n` +
-          `⚠️ No emergency contacts found.`
-        );
-
-      }
-
-
-          // Get emergency contacts returned by backend
-          setNotifiedContacts(
-            response.data.notifiedContacts || []
+              longitude:
+                position.coords.longitude
+            }
           );
 
 
-          // Refresh alerts immediately
+          // Try contacts returned by backend first
+          let contacts =
+            response.data.notifiedContacts || [];
+
+
+          // If backend did not return contacts,
+          // get them from the existing contacts API.
+          if (contacts.length === 0) {
+
+            contacts =
+              await fetchEmergencyContacts();
+
+          }
+
+
+          // Show notification simulation
+          if (contacts.length > 0) {
+
+            alert(
+              `🚨 SOS Alert Activated!\n\n` +
+
+              `📍 Your location has been recorded.\n` +
+
+              `📞 ${contacts.length} emergency contact(s) identified.\n` +
+
+              `✅ Notification process initiated.`
+            );
+
+          }
+
+          else {
+
+            alert(
+              `🚨 SOS Alert Activated!\n\n` +
+
+              `📍 Your location has been recorded.\n` +
+
+              `⚠️ No emergency contacts found.`
+            );
+
+          }
+
+
+          // Save contacts for display
+          setNotifiedContacts(contacts);
+
+
+          // Refresh dashboard
           await onAlertChange();
 
         }
@@ -91,7 +149,9 @@ function SOSButton({ alerts = [], onAlertChange }) {
 
           console.log(error);
 
-          alert("Failed to send SOS Alert");
+          alert(
+            "Failed to send SOS Alert"
+          );
 
         }
 
@@ -100,7 +160,9 @@ function SOSButton({ alerts = [], onAlertChange }) {
 
       () => {
 
-        alert("Unable to get your location.");
+        alert(
+          "Unable to get your location."
+        );
 
       }
 
@@ -115,10 +177,12 @@ function SOSButton({ alerts = [], onAlertChange }) {
 
   async function handleCancel() {
 
-    // Make sure an active alert exists
+    // Make sure active alert exists
     if (!activeAlert) {
 
-      alert("No active alert found.");
+      alert(
+        "No active alert found."
+      );
 
       return;
 
@@ -132,14 +196,16 @@ function SOSButton({ alerts = [], onAlertChange }) {
       );
 
 
-      alert(response.data.message);
+      alert(
+        response.data.message
+      );
 
 
-      // Clear notified contacts
+      // Clear displayed contacts
       setNotifiedContacts([]);
 
 
-      // Fetch updated alerts from MongoDB
+      // Refresh dashboard data
       await onAlertChange();
 
     }
@@ -148,12 +214,18 @@ function SOSButton({ alerts = [], onAlertChange }) {
 
       console.log(error);
 
-      alert("Failed to Cancel Alert");
+      alert(
+        "Failed to Cancel Alert"
+      );
 
     }
 
   }
 
+
+  // ==========================================
+  // DISPLAY
+  // ==========================================
 
   return (
 
@@ -178,12 +250,14 @@ function SOSButton({ alerts = [], onAlertChange }) {
           </p>
 
 
-          {/* Emergency Contacts */}
+          {/* ================================
+              NOTIFICATION STATUS
+          ================================= */}
 
           <div className="notified-contacts">
 
             <h5>
-              📞 Emergency Contacts
+              📢 Notification Status
             </h5>
 
 
@@ -192,39 +266,58 @@ function SOSButton({ alerts = [], onAlertChange }) {
               <>
 
                 <p className="contacts-notified-message">
-                  Emergency contacts associated with this SOS:
+
+                  ✅ Notification process initiated
+
                 </p>
 
 
-                {notifiedContacts.map((contact, index) => (
+                <p>
 
-                  <div
-                    key={index}
-                    className="notified-contact"
-                  >
+                  📞{" "}
+                  {notifiedContacts.length}{" "}
+                  emergency contact(s) identified.
 
-                    <strong>
-                      👤 {contact.name}
-                    </strong>
+                </p>
 
-                    <br />
 
-                    📞 {contact.phone}
+                {notifiedContacts.map(
+                  (contact, index) => (
 
-                    <br />
+                    <div
+                      key={
+                        contact._id || index
+                      }
+                      className="notified-contact"
+                    >
 
-                    🤝 {contact.relationship}
+                      <strong>
+                        👤 {contact.name}
+                      </strong>
 
-                  </div>
 
-                ))}
+                      <br />
+
+
+                      📞 {contact.phone}
+
+
+                      <br />
+
+
+                      🤝 {contact.relationship}
+
+                    </div>
+
+                  )
+                )}
 
               </>
 
             ) : (
 
               <p>
-                No emergency contacts added.
+                ⚠️ No emergency contacts added.
               </p>
 
             )}
@@ -232,13 +325,17 @@ function SOSButton({ alerts = [], onAlertChange }) {
           </div>
 
 
-          {/* Cancel */}
+          {/* ================================
+              CANCEL
+          ================================= */}
 
           <button
             className="btn btn-outline-danger cancel-btn"
             onClick={handleCancel}
           >
+
             Cancel Alert
+
           </button>
 
         </>
@@ -247,9 +344,9 @@ function SOSButton({ alerts = [], onAlertChange }) {
       ) : (
 
 
-        /* =====================================
+        /* ===================================
            NORMAL SOS BUTTON
-        ===================================== */
+        =================================== */
 
         <>
 
@@ -257,12 +354,16 @@ function SOSButton({ alerts = [], onAlertChange }) {
             className="sos-button"
             onClick={handleSOS}
           >
+
             SOS
+
           </button>
 
 
           <p className="sos-status">
+
             Press only during an emergency.
+
           </p>
 
         </>
