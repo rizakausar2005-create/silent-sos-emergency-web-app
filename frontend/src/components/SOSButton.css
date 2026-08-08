@@ -63,3 +63,25 @@
 .cancel-btn{
     margin-top:20px;
 }
+/* ==============================
+   SOS RESPONSIVE DESIGN
+============================== */
+
+@media (max-width: 600px) {
+
+  .sos-button {
+    width: 170px !important;
+    height: 170px !important;
+    font-size: 28px;
+  }
+
+  .sos-status {
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .notified-contacts {
+    width: 100%;
+  }
+
+}

@@ -54,89 +54,119 @@ function EmergencyContacts() {
   }
 
 
-  // Add / Update contact
-  async function addContact(e) {
+async function addContact(e) {
 
-    e.preventDefault();
+  e.preventDefault();
 
+  // ==========================================
+  // VALIDATION
+  // ==========================================
 
-    // Basic validation
-    if (
-      !contact.name.trim() ||
-      !contact.phone.trim() ||
-      !contact.relationship.trim()
-    ) {
+  if (!contact.name.trim()) {
 
-      alert("Please fill all contact details.");
+    alert("Please enter the contact name.");
 
-      return;
-
-    }
-
-
-    try {
-
-      let response;
-
-
-      // UPDATE
-      if (editingId) {
-
-        response = await API.put(
-          `/contacts/${editingId}`,
-          {
-            name: contact.name,
-            phone: contact.phone,
-            relationship: contact.relationship
-          }
-        );
-
-      }
-
-
-      // ADD
-      else {
-
-        response = await API.post(
-          "/contacts",
-          {
-            name: contact.name,
-            phone: contact.phone,
-            relationship: contact.relationship
-          }
-        );
-
-      }
-
-
-      alert(response.data.message);
-
-
-      // Refresh contacts
-      await fetchContacts();
-
-
-      // Clear form
-      setContact({
-        name: "",
-        phone: "",
-        relationship: ""
-      });
-
-
-      setEditingId(null);
-
-    }
-
-    catch (error) {
-
-      console.log(error);
-
-      alert("Operation Failed");
-
-    }
+    return;
 
   }
+
+
+  if (!contact.phone.trim()) {
+
+    alert("Please enter the contact phone number.");
+
+    return;
+
+  }
+
+
+  if (!/^[0-9]{10}$/.test(contact.phone.trim())) {
+
+    alert(
+      "Please enter a valid 10-digit phone number."
+    );
+
+    return;
+
+  }
+
+
+  if (!contact.relationship.trim()) {
+
+    alert("Please enter the relationship.");
+
+    return;
+
+  }
+
+
+  // ==========================================
+  // ADD / UPDATE CONTACT
+  // ==========================================
+
+  try {
+
+    let response;
+
+
+    if (editingId) {
+
+      response = await API.put(
+        `/contacts/${editingId}`,
+        {
+          name: contact.name.trim(),
+          phone: contact.phone.trim(),
+          relationship: contact.relationship.trim()
+        }
+      );
+
+    }
+
+    else {
+
+      response = await API.post(
+        "/contacts",
+        {
+          name: contact.name.trim(),
+          phone: contact.phone.trim(),
+          relationship: contact.relationship.trim()
+        }
+      );
+
+    }
+
+
+    alert(response.data.message);
+
+
+    // Refresh contacts
+    await fetchContacts();
+
+
+    // Reset form
+    setContact({
+      name: "",
+      phone: "",
+      relationship: ""
+    });
+
+
+    setEditingId(null);
+
+  }
+
+  catch (error) {
+
+    console.log(error);
+
+    alert(
+      error.response?.data?.message ||
+      "Operation Failed"
+    );
+
+  }
+
+}
 
 
   // Edit contact

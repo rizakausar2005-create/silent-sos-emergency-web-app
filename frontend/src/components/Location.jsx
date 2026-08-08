@@ -10,51 +10,34 @@ function Location() {
 
   function getLocation() {
 
-    if (navigator.geolocation) {
-
-      navigator.geolocation.getCurrentPosition(
-
-        function (position) {
-
-          setLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          });
-
-        },
-
-        function () {
-
-          alert("Unable to get your location.");
-
-        }
-
-      );
-
-    } else {
-
+    if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser.");
-
-    }
-
-  }
-
-  function openMap() {
-
-    if (!location.latitude || !location.longitude) {
-
-      alert("Please get your location first.");
-
       return;
-
     }
 
-    const mapUrl =
-      `https://www.google.com/maps?q=${location.latitude},${location.longitude}`;
+    navigator.geolocation.getCurrentPosition(
 
-    window.open(mapUrl, "_blank");
+      function (position) {
 
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        });
+
+      },
+
+      function () {
+        alert("Unable to get your location.");
+      }
+
+    );
   }
+
+  // Google Maps link
+  const mapUrl =
+    location.latitude && location.longitude
+      ? `https://www.google.com/maps?q=${location.latitude},${location.longitude}`
+      : "";
 
   return (
 
@@ -71,6 +54,9 @@ function Location() {
         Get My Location
       </button>
 
+
+      {/* Location Information */}
+
       <div className="location-info">
 
         <div className="location-item">
@@ -85,6 +71,7 @@ function Location() {
 
         </div>
 
+
         <div className="location-item">
 
           <span className="location-label">
@@ -97,18 +84,52 @@ function Location() {
 
         </div>
 
+
+        {/* Location Status */}
+
+        <div className="location-item">
+
+          <span className="location-label">
+            Status
+          </span>
+
+          <p className="location-value location-status">
+
+            {location.latitude && location.longitude
+              ? "🟢 Location Available"
+              : "⚪ Location Not Available"}
+
+          </p>
+
+        </div>
+
       </div>
 
-      {/* View on Map button */}
+
+      {/* Google Maps */}
 
       {location.latitude && location.longitude && (
 
-        <button
-          className="btn btn-outline-dark map-btn"
-          onClick={openMap}
-        >
-          🗺️ View on Map
-        </button>
+        <div className="map-container">
+
+          <h4>
+            📍 Location Found
+          </h4>
+
+          <p>
+            You can view your current location on Google Maps.
+          </p>
+
+          <a
+            href={mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-success map-btn"
+          >
+            🗺️ Open in Google Maps
+          </a>
+
+        </div>
 
       )}
 
