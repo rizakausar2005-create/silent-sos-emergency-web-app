@@ -14,7 +14,7 @@ function Location() {
 
       navigator.geolocation.getCurrentPosition(
 
-        function(position) {
+        function (position) {
 
           setLocation({
             latitude: position.coords.latitude,
@@ -23,8 +23,10 @@ function Location() {
 
         },
 
-        function() {
+        function () {
+
           alert("Unable to get your location.");
+
         }
 
       );
@@ -37,52 +39,82 @@ function Location() {
 
   }
 
+  function openMap() {
+
+    if (!location.latitude || !location.longitude) {
+
+      alert("Please get your location first.");
+
+      return;
+
+    }
+
+    const mapUrl =
+      `https://www.google.com/maps?q=${location.latitude},${location.longitude}`;
+
+    window.open(mapUrl, "_blank");
+
+  }
+
   return (
 
-<div className="location-container">
+    <div>
 
-    <h3 className="location-title">
+      <h3 className="location-title">
         📍 Live Location
-    </h3>
+      </h3>
 
-    <button
+      <button
         className="btn btn-dark location-btn"
         onClick={getLocation}
-    >
+      >
         Get My Location
-    </button>
+      </button>
 
-    <div className="location-info">
+      <div className="location-info">
 
         <div className="location-item">
 
-            <span className="location-label">
-                Latitude
-            </span>
+          <span className="location-label">
+            Latitude
+          </span>
 
-            <p className="location-value">
-                {location.latitude || "Not Available"}
-            </p>
+          <p className="location-value">
+            {location.latitude || "Not Available"}
+          </p>
 
         </div>
 
         <div className="location-item">
 
-            <span className="location-label">
-                Longitude
-            </span>
+          <span className="location-label">
+            Longitude
+          </span>
 
-            <p className="location-value">
-                {location.longitude || "Not Available"}
-            </p>
+          <p className="location-value">
+            {location.longitude || "Not Available"}
+          </p>
 
         </div>
+
+      </div>
+
+      {/* View on Map button */}
+
+      {location.latitude && location.longitude && (
+
+        <button
+          className="btn btn-outline-dark map-btn"
+          onClick={openMap}
+        >
+          🗺️ View on Map
+        </button>
+
+      )}
 
     </div>
 
-</div>
-
-);
+  );
 
 }
 
