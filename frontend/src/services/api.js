@@ -5,7 +5,6 @@ const API = axios.create({
 });
 
 API.interceptors.request.use((config) => {
-
   const token = localStorage.getItem("token");
 
   if (token) {
@@ -13,7 +12,6 @@ API.interceptors.request.use((config) => {
   }
 
   return config;
-
 });
 
 export default API;
