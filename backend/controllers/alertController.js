@@ -168,21 +168,40 @@ const getDashboardStats = async (req, res) => {
 
     try {
 
+        // Total SOS alerts created by this user
         const totalAlerts = await Alert.countDocuments({
             user: req.user.id
         });
 
+
+        // Total emergency contacts
         const totalContacts = await Contact.countDocuments({
             user: req.user.id
         });
 
-        res.status(200).json({
-            totalAlerts,
-            totalContacts,
+
+        // Check if the user currently has an active SOS
+        const activeAlert = await Alert.findOne({
+            user: req.user.id,
             status: "Active"
         });
 
-    } catch (error) {
+
+        res.status(200).json({
+
+            totalAlerts,
+
+            totalContacts,
+
+            status: activeAlert
+                ? "Active"
+                : "Ready"
+
+        });
+
+    }
+
+    catch (error) {
 
         console.log(error);
 

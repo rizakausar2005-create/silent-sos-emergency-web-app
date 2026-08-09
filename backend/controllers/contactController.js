@@ -75,49 +75,36 @@ const getContacts = async (req, res) => {
 };
 
 
-// Delete Emergency Contact
-
+// Delete Contact
 const deleteContact = async (req, res) => {
 
     try {
 
         const { id } = req.params;
 
-        const contact = await EmergencyContact.findOne({
-
+        const contact = await EmergencyContact.findOneAndDelete({
             _id: id,
             user: req.user.id
-
         });
 
         if (!contact) {
 
             return res.status(404).json({
-
                 message: "Contact not found"
-
             });
 
         }
 
-        await EmergencyContact.findByIdAndDelete(id);
-
         res.json({
-
             message: "Contact Deleted Successfully"
-
         });
 
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.log(error);
 
         res.status(500).json({
-
             message: "Failed to Delete Contact"
-
         });
 
     }
@@ -125,54 +112,48 @@ const deleteContact = async (req, res) => {
 };
 
 
-// Update Emergency Contact
-
+// Update Contact
 const updateContact = async (req, res) => {
 
     try {
 
-        const { id } = req.params;
-
-        const contact = await EmergencyContact.findOne({
-
-            _id: id,
-            user: req.user.id
-
-        });
-
-        if (!contact) {
-
-            return res.status(404).json({
-
-                message: "Contact not found"
-
-            });
-
-        }
+        const { name, phone, relationship } = req.body;
 
         const updatedContact =
             await EmergencyContact.findOneAndUpdate(
 
                 {
-                    _id: id,
+                    _id: req.params.id,
                     user: req.user.id
                 },
 
                 {
-                    name: req.body.name,
-                    phone: req.body.phone,
-                    relationship: req.body.relationship
+                    name,
+                    phone,
+                    relationship
                 },
 
                 {
-                    new: true
+                    new: true,
+                    runValidators: true
                 }
 
             );
 
+
+        if (!updatedContact) {
+
+            return res.status(404).json({
+                message: "Contact not found"
+            });
+
+        }
+
+
         res.json({
 
             message: "Contact Updated Successfully",
+
             updatedContact
 
         });
@@ -184,15 +165,12 @@ const updateContact = async (req, res) => {
         console.log(error);
 
         res.status(500).json({
-
             message: "Failed to Update Contact"
-
         });
 
     }
 
 };
-
 
 module.exports = {
 
