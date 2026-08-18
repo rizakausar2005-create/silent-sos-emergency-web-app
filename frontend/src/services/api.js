@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://silent-sos-emergency-web-app.onrender.com"
+  baseURL: "https://silent-sos-emergency-backend.onrender.com"
 });
 
 API.interceptors.request.use((config) => {
